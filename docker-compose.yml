@@ -1,0 +1,7 @@
+version: '3'
+services:
+  python_app:
+    build: ./app/
+  
+  db:
+    build: ./database/
