@@ -10,3 +10,33 @@ Para o desafio, será necessário construir uma pipeline que captura os dados mi
 
 A pipeline deverá ser construída subindo uma instância local do Prefect (em Python). Utilize a versão *0.15.9* do Prefect.
 
+
+## Configuração de ambiente para desenvolvimento
+### Requisitos
+* [Docker](https://docs.docker.com/get-docker/) </br>
+* [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Procedimentos
+* Clonar o repositório
+```bash
+git clone https://github.com/ptk-trindade/emd-desafio-data-eng.git
+```
+* Em um terminal, ir até a pasta raiz do projeto (eg. `cd emd-desafio-data-eng`)
+* Subir o ambiente com o docker-compose
+```bash
+docker-compose up --build
+```
+* Pronto! O ambiente já está subindo. </br>
+
+## Execução
+Quando o ambiente terminar de subir, ele comçará a executar a pipeline. </br>
+O fluxo irá rodar 10 vezes, uma a cada minuto, gerando um arquivo `app/csv_files/brt_data.csv`. (ps. Esse arquivo será gerado _dentro_ do container) </br>
+
+Os dados também serão carregados em um banco Postgres, que pode ser acessado localmente com as seguintes credenciais: </br>
+```cr
+Host: localhost
+Port: 54320
+Database: brt_db
+Username: username
+Password: secret
+```
