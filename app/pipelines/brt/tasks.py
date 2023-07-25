@@ -1,12 +1,12 @@
-import prefect
-from prefect import task, Flow
-from sqlalchemy import create_engine
+from datetime import timedelta
 import os
 import requests
-from datetime import timedelta, datetime
-import pandas as pd
 
-from pipelines.schedules import every_1_minute
+import pandas as pd
+import prefect
+from prefect import task
+from sqlalchemy import create_engine
+
 
 
 @task(max_retries=3, retry_delay=timedelta(seconds=10))
@@ -16,7 +16,13 @@ def get_brt_data() -> dict:
 
 @task
 def create_dataframe(data: dict) -> pd.DataFrame:
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    
+    # df manipulation
+    df.columns = df.columns.str.lower()
+    df['datahora'] = pd.to_datetime(df['datahora'], unit='ms')
+
+    return df
 
 @task
 def load_csv(df: pd.DataFrame):
@@ -43,15 +49,4 @@ def load_db(df: pd.DataFrame):
     db_name = 'brt_db'
 
     engine = create_engine(f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}', echo=False)
-    df.to_sql('brt_data', con=engine, if_exists='append')
-
-
-with Flow("brt-flow") as brt_flow:
-    print("--- BRT Flow ---")
-    data = get_brt_data()
-    df = create_dataframe(data["veiculos"])
-    load_csv(df)
-    load_db(df)
-
-
-brt_flow.schedule = every_1_minute
+    df.to_sql('brt_data', con=engine, if_exists='append', index=False)
