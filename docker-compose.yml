@@ -4,4 +4,12 @@ services:
     build: ./app/
   
   db:
+    environment:
+        POSTGRES_USER: username
+        POSTGRES_PASSWORD: secret
+        POSTGRES_DB: brt_db
+    image: postgres:latest
+    restart: always
+    ports:
+      - "54320:5432"
     build: ./database/
