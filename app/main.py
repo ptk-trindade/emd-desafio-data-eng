@@ -3,7 +3,7 @@ import os
 
 print("pwd", os.getcwd())
 
-from pipelines.brt.brt import brt_flow
+from pipelines.brt.flows import brt_flow
 
 load_dotenv()
 
