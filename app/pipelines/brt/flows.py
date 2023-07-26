@@ -1,7 +1,7 @@
 from prefect import Flow
 from prefect.run_configs import DockerRun
 
-from schedules import every_1_minute
+from pipelines.brt.schedules import brt_schedule
 from pipelines.brt.tasks import (
     get_brt_data,
     create_dataframe,
@@ -24,5 +24,5 @@ with Flow(
     load_db(df)
 
 
-brt_gps_flow.schedule = every_1_minute
+brt_gps_flow.schedule = brt_schedule
 brt_gps_flow.run_config = DockerRun()
